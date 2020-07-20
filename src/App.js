@@ -38,8 +38,8 @@ export default class App extends React.Component {
         if (this.autocomplete !== null) {
             let place = this.autocomplete.getPlace()
             let center = {
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lat()
+                lat: parseFloat(place.geometry.location.lat()),
+                lng: parseFloat(place.geometry.location.lng())
             }
             this.setState({
                 center: center,
@@ -53,6 +53,26 @@ export default class App extends React.Component {
         console.log('marker: ', marker)
     }
 
+    myFunction = () => {
+        // Declare variables
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById('myInput');
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("myUL");
+        li = ul.getElementsByTagName('li');
+
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("a")[0];
+            txtValue = a.textContent || a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+
     render () {
         return (
             <div>
@@ -64,7 +84,7 @@ export default class App extends React.Component {
                 <GoogleMap
                     id="searchbox-example"
                     mapContainerStyle={mapContainerStyle}
-                    zoom={5}
+                    zoom={10}
                     center={this.state.center}
                     options={{disableDefaultUI: true}}
                     onLoad={
@@ -108,6 +128,21 @@ export default class App extends React.Component {
                 </GoogleMap>
                 </LoadScript>
                 <button id="btn">Hello world</button>
+                <div id="search-bar">
+                    <input type="text" id="myInput" onKeyUp={this.myFunction} placeholder="Search for names.." />
+
+                    <ul id="myUL">
+                        <li><a href="#">Adele</a></li>
+                        <li><a href="#">Agnes</a></li>
+
+                        <li><a href="#">Billy</a></li>
+                        <li><a href="#">Bob</a></li>
+
+                        <li><a href="#">Calvin</a></li>
+                        <li><a href="#">Christina</a></li>
+                        <li><a href="#">Cindy</a></li>
+                    </ul>
+                </div>
             </div>
         )
     }
