@@ -4,19 +4,18 @@ import { GoogleMap, LoadScript, Autocomplete, Marker } from '@react-google-maps/
 const API_KEY = "AIzaSyDJ72tUrPw1vtx-asnz2eFhxJlAM-TGMEo";
 
 const mapContainerStyle = {
-    height: "400px",
-    width: "800px"
+    height: "500px",
+    width: "1000px"
 }
 
-const center = {lat: -3.745, lng: -38.523};
 
 export default class App extends React.Component {
     constructor (props) {
         super(props)
         this.state = {
             center: {
-                lat: -3.745,
-                lng: -38.523
+                lat: -1,
+                lng: 35.523
             },
             markers: [{lat: 3.745, lng: 36}, {lat: 4.745, lng: 32}],
             placeName: "",
@@ -35,40 +34,20 @@ export default class App extends React.Component {
         this.autocomplete = autocomplete
     }
 
-
     onPlaceChanged () {
         if (this.autocomplete !== null) {
             let place = this.autocomplete.getPlace()
-            try {
-                var request = {
-                    placeId: 'ChIJp0lN2HIRLxgRTJKXslQCz_c',
-                    fields: ['name', 'geometry']
-                }
-                let service = new window.google.maps.places.PlacesService(this.state.map);
-                service.getDetails(request, this.placeCallback);
-                console.log("google", service)
-            } catch (e) {
-                console.log("No service", e)
+            let center = {
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lat()
             }
-            // service.getDetails(request, callback);
-
-
-
+            this.setState({
+                center: center,
+                placeName: place.name
+            })
         } else {
             console.log('Autocomplete is not loaded yet!')
         }
-    }
-    placeCallback = (place, status) => {
-        console.log("Place callback", place, status)
-        let center = {
-            lat: place.geometry.location.lat(),
-            lng: place.geometry.location.lat()
-        }
-        this.setState({
-            center: center,
-            placeName: place.name
-        })
-        console.log(place.geometry.location.LatLngBounds )
     }
     onLoadMarker (marker) {
         console.log('marker: ', marker)
@@ -85,7 +64,7 @@ export default class App extends React.Component {
                 <GoogleMap
                     id="searchbox-example"
                     mapContainerStyle={mapContainerStyle}
-                    zoom={2.5}
+                    zoom={5}
                     center={this.state.center}
                     options={{disableDefaultUI: true}}
                     onLoad={
@@ -100,7 +79,7 @@ export default class App extends React.Component {
                     >
                         <input
                             type="text"
-                            placeholder="Customized your placeholder"
+                            placeholder="Search ..."
                             style={{
                                 boxSizing: `border-box`,
                                 border: `1px solid transparent`,

@@ -1,6 +1,6 @@
 #btn {
-  position:absolute;
-  bottom:30%;
+  position: absolute;
+  bottom: 3%;
   color: #fff;
   background-color: #4d90fe;
   padding: 11px;
@@ -12,14 +12,13 @@
 
   outline: none;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  alignment-baseline:central;
-  width:90%;
-  left:5%;
-  text-align:center;
-  text-decoration:none;
-
-
-  margin:0px auto;}
+  alignment-baseline: central;
+  width: 20%;
+  left: 50%;
+  margin-left: -100px;
+  text-align: center;
+  text-decoration: none;
+}
 
 
 #my_button:hover{
