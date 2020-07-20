@@ -1,16 +1,10 @@
 import React from 'react';
 import './App.css';
 import { GoogleMap, LoadScript, Autocomplete, Marker } from '@react-google-maps/api';
+import Page1Nav from "./Page1Nav";
 const API_KEY = "AIzaSyDJ72tUrPw1vtx-asnz2eFhxJlAM-TGMEo";
 
-const mapContainerStyle = {
-    height: "400px",
-    width: "800px"
-}
-
-const center = {lat: -3.745, lng: -38.523};
-
-export default class App extends React.Component {
+export default class extends React.Component {
     constructor (props) {
         super(props)
         this.state = {
@@ -75,21 +69,18 @@ export default class App extends React.Component {
         })
         console.log("DDDDD", center)
     }
-    onLoadMarker (marker) {
-        console.log('marker: ', marker)
-    }
 
     render () {
         return (
-            <div>
-                <h1>hello world</h1>
+            <div id={"page1"}>
+                <Page1Nav />
                 <LoadScript
                     googleMapsApiKey={API_KEY}
                     libraries={["places"]}
                 >
                     <GoogleMap
-                        id="searchbox-example"
-                        mapContainerStyle={mapContainerStyle}
+                        id="gmap"
+                        mapContainerStyle={{height: "100%"}}
                         zoom={10}
                         center={this.state.center}
                         options={{disableDefaultUI: true}}
@@ -133,9 +124,12 @@ export default class App extends React.Component {
                         )}
                     </GoogleMap>
                 </LoadScript>
-                <button id="btn" onClick={this.fetchMore}>Hello world</button>
+                <div id="div-btn" style={{ justifyContent: "center" }}>
+                    <button id="btn" onClick={() => this.fetchMore()}>
+                        POST YOUR AD
+                    </button>
+                </div>
             </div>
         )
     }
 }
-
