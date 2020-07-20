@@ -25,50 +25,23 @@ export default class extends React.Component {
         this.autocomplete = autocomplete
     }
 
-    fetchMore = () => {
-        console.log('AAAAAAA')
-        try {
-            var request = {
-                placeId: this.state.placeId,
-                fields: ['name', 'geometry']
-            }
-            let service = new window.google.maps.places.PlacesService(this.state.map);
-            console.log('BBB', service)
-            service.getDetails(request, this.placeCallback);
-            console.log("google", service, request)
-        } catch (e) {
-            console.log("No service", e)
-        }
-    }
 
-    onPlaceChanged () {
+
+    onPlaceChanged = () => {
         if (this.autocomplete !== null) {
-            try {
-                var request = {
-                    placeId: this.state.placeId,
-                    fields: ['name', 'geometry']
-                }
-                let service = new window.google.maps.places.PlacesService(this.state.map);
-                service.getDetails(request, this.placeCallback);
-            } catch (e) {
-                console.log("No service", e)
-            }
+            let place = this.autocomplete.getPlace();
+            let center = {
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng(),
+            };
+            this.setState({
+                center,
+                place: place.name,
+            });
         } else {
-            console.log('Autocomplete is not loaded yet!')
+            console.log("Autocomplete is not loaded yet!");
         }
-    }
-    placeCallback = (place, status) => {
-        console.log("CCCC Place callback", place, status)
-        let center = {
-            lat: place.geometry.location.lat(),
-            lng: place.geometry.location.lng()
-        }
-        this.setState({
-            center: center,
-            placeName: place.name
-        })
-        console.log("DDDDD", center)
-    }
+    };
 
     render () {
         let {markers} = this.props
