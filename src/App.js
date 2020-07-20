@@ -25,20 +25,13 @@ export default class App extends React.Component {
         this.autocomplete = null
         this.onLoad = this.onLoad.bind(this)
         this.onPlaceChanged = this.onPlaceChanged.bind(this)
-        var request = {
-            placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4',
-            fields: ['name', 'rating', 'formatted_phone_number', 'geometry']
-        };
     }
 
     onLoad (autocomplete) {
         this.autocomplete = autocomplete
     }
 
-
-    onPlaceChanged () {
-        if (this.autocomplete !== null) {
-            let place = this.autocomplete.getPlace()
+    fetchMore = () => {
             try {
                 var request = {
                     placeId: 'ChIJp0lN2HIRLxgRTJKXslQCz_c',
@@ -46,14 +39,24 @@ export default class App extends React.Component {
                 }
                 let service = new window.google.maps.places.PlacesService(this.state.map);
                 service.getDetails(request, this.placeCallback);
-                console.log("google", service)
+                console.log("google", service, request)
             } catch (e) {
                 console.log("No service", e)
             }
-            // service.getDetails(request, callback);
+    }
 
-
-
+    onPlaceChanged () {
+        if (this.autocomplete !== null) {
+            try {
+                var request = {
+                    placeId: 'ChIJp0lN2HIRLxgRTJKXslQCz_c',
+                    fields: ['name', 'geometry']
+                }
+                let service = new window.google.maps.places.PlacesService(this.state.map);
+                service.getDetails(request, this.placeCallback);
+            } catch (e) {
+                console.log("No service", e)
+            }
         } else {
             console.log('Autocomplete is not loaded yet!')
         }
@@ -62,13 +65,13 @@ export default class App extends React.Component {
         console.log("Place callback", place, status)
         let center = {
             lat: place.geometry.location.lat(),
-            lng: place.geometry.location.lat()
+            lng: place.geometry.location.lng()
         }
         this.setState({
             center: center,
             placeName: place.name
         })
-        console.log(place.geometry.location.LatLngBounds )
+        console.log(center)
     }
     onLoadMarker (marker) {
         console.log('marker: ', marker)
@@ -85,7 +88,7 @@ export default class App extends React.Component {
                 <GoogleMap
                     id="searchbox-example"
                     mapContainerStyle={mapContainerStyle}
-                    zoom={2.5}
+                    zoom={10}
                     center={this.state.center}
                     options={{disableDefaultUI: true}}
                     onLoad={
@@ -128,7 +131,7 @@ export default class App extends React.Component {
                     )}
                 </GoogleMap>
                 </LoadScript>
-                <button id="btn">Hello world</button>
+                <button id="btn" onClick={this.fetchMore}>Hello world</button>
             </div>
         )
     }
