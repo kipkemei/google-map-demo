@@ -18,9 +18,10 @@ export default class extends Component{
     }
 
     addMarker = (marker) => {
-        var {markers} = this.state;
-        markers.push(marker)
-        this.setState({markers: markers})
+        var markers = this.state.markers;
+        var newMarker = markers.push(marker)
+        console.log("newMarker", newMarker, markers)
+        this.setState({markers: [...markers, marker]})
         console.log('Added')
     }
 
@@ -32,7 +33,7 @@ export default class extends Component{
                         <PageTwo
                             addMarker={this.addMarker}
                             goBack={this.goBack}/>
-                        : <PageOne goBack/>
+                        : <PageOne that={this} markers={this.state.markers} nextPage={this.goBack}/>
                 }
             </div>
         )

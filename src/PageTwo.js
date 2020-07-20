@@ -20,6 +20,7 @@ const API_KEY = "AIzaSyDJ72tUrPw1vtx-asnz2eFhxJlAM-TGMEo";
 
 
 export default class extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -29,6 +30,7 @@ export default class extends Component {
             selected: false,
         };
     }
+
     handleChange = (event) => {
         this.state.selected
             ? this.setState({ predictions: [] })
@@ -82,7 +84,6 @@ export default class extends Component {
         })
         this.props.addMarker(center)
     }
-
 
     render() {
         const {goBack} = this.props

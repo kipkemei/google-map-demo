@@ -29,7 +29,7 @@ export default class extends React.Component {
         console.log('AAAAAAA')
         try {
             var request = {
-                placeId: 'ChIJp0lN2HIRLxgRTJKXslQCz_c',
+                placeId: this.state.placeId,
                 fields: ['name', 'geometry']
             }
             let service = new window.google.maps.places.PlacesService(this.state.map);
@@ -45,7 +45,7 @@ export default class extends React.Component {
         if (this.autocomplete !== null) {
             try {
                 var request = {
-                    placeId: 'ChIJp0lN2HIRLxgRTJKXslQCz_c',
+                    placeId: this.state.placeId,
                     fields: ['name', 'geometry']
                 }
                 let service = new window.google.maps.places.PlacesService(this.state.map);
@@ -71,6 +71,7 @@ export default class extends React.Component {
     }
 
     render () {
+        let {markers} = this.props
         return (
             <div id={"page1"}>
                 <Page1Nav />
@@ -81,14 +82,13 @@ export default class extends React.Component {
                     <GoogleMap
                         id="gmap"
                         mapContainerStyle={{height: "100%"}}
-                        zoom={10}
+                        zoom={3}
                         center={this.state.center}
                         options={{disableDefaultUI: true}}
                         onLoad={
                             (map) => {
                                 this.setState({map: map})
                             }}
-
                     >
                         <Autocomplete
                             onLoad={this.onLoad}
@@ -114,7 +114,7 @@ export default class extends React.Component {
                                 }}
                             />
                         </Autocomplete>
-                        {this.state.markers.map((item, key)=>
+                        {this.props.that.state.markers.map((item, key)=>
                             <div key={key}>
                                 <Marker
                                     onLoad={this.onLoadMarker}
@@ -125,7 +125,7 @@ export default class extends React.Component {
                     </GoogleMap>
                 </LoadScript>
                 <div id="div-btn" style={{ justifyContent: "center" }}>
-                    <button id="btn" onClick={() => this.fetchMore()}>
+                    <button id="btn" onClick={this.props.nextPage}>
                         POST YOUR AD
                     </button>
                 </div>
