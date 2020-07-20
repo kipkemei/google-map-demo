@@ -32,12 +32,14 @@ export default class App extends React.Component {
     }
 
     fetchMore = () => {
+        console.log('AAAAAAA')
             try {
                 var request = {
                     placeId: 'ChIJp0lN2HIRLxgRTJKXslQCz_c',
                     fields: ['name', 'geometry']
                 }
                 let service = new window.google.maps.places.PlacesService(this.state.map);
+                console.log('BBB', service)
                 service.getDetails(request, this.placeCallback);
                 console.log("google", service, request)
             } catch (e) {
@@ -62,7 +64,7 @@ export default class App extends React.Component {
         }
     }
     placeCallback = (place, status) => {
-        console.log("Place callback", place, status)
+        console.log("CCCC Place callback", place, status)
         let center = {
             lat: place.geometry.location.lat(),
             lng: place.geometry.location.lng()
@@ -71,7 +73,7 @@ export default class App extends React.Component {
             center: center,
             placeName: place.name
         })
-        console.log(center)
+        console.log("DDDDD", center)
     }
     onLoadMarker (marker) {
         console.log('marker: ', marker)
