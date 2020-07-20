@@ -1,64 +1,136 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import {GoogleApiWrapper, InfoWindow, Map, Marker} from "google-maps-react";
-
+import { GoogleMap, LoadScript, Autocomplete, Marker } from '@react-google-maps/api';
 const API_KEY = "AIzaSyDJ72tUrPw1vtx-asnz2eFhxJlAM-TGMEo";
 
-export class App extends React.Component {
-
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            selectedPlace: {}
-        }
-    }
-    onMapClicked = e => {
-        console.log("Hey");
-    };
-
-    render() {
-        return (
-            <div className="App">
-                <h1>Hello World {API_KEY} !!</h1>
-                <Map
-                    google={this.props.google}
-                    // style={style}
-                    initialCenter={{
-                        lat: 0.854885,
-                        lng: 35.081807
-                    }}
-                    onClick={this.onMapClicked}
-                    zoom={14}>
-
-                    <Marker onClick={this.onMarkerClick}
-                            name={'Current location'}/>
-                    <Marker
-                        name={'Dolores park'}
-                        position={{lat: 34, lng: 55}} />
-                    <Marker />
-                    <Marker
-                        name={'Your position'}
-                        position={{lat: 35, lng: 0.1}}
-                        icon={{
-                            url: "/path/to/custom_icon.png",
-                            anchor: new this.props.google.maps.Point(32,32),
-                            scaledSize: new this.props.google.maps.Size(64,64)
-                        }} />
-
-                    <InfoWindow onClose={this.onInfoWindowClose}>
-                        <div>
-                            <h1>{this.state.selectedPlace.name}</h1>
-                        </div>
-                    </InfoWindow>
-                </Map>
-            </div>
-        );
-    }
+const mapContainerStyle = {
+    height: "400px",
+    width: "800px"
 }
 
-export default GoogleApiWrapper({
-    apiKey: (API_KEY)
-})(App)
+const center = {lat: -3.745, lng: -38.523};
+
+export default class App extends React.Component {
+    constructor (props) {
+        super(props)
+        this.state = {
+            center: {
+                lat: -3.745,
+                lng: -38.523
+            },
+            markers: [{lat: 3.745, lng: 36}, {lat: 4.745, lng: 32}],
+            placeName: "",
+            map: null
+        }
+        this.autocomplete = null
+        this.onLoad = this.onLoad.bind(this)
+        this.onPlaceChanged = this.onPlaceChanged.bind(this)
+        var request = {
+            placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4',
+            fields: ['name', 'rating', 'formatted_phone_number', 'geometry']
+        };
+    }
+
+    onLoad (autocomplete) {
+        this.autocomplete = autocomplete
+    }
+
+
+    onPlaceChanged () {
+        if (this.autocomplete !== null) {
+            let place = this.autocomplete.getPlace()
+            try {
+                var request = {
+                    placeId: 'ChIJp0lN2HIRLxgRTJKXslQCz_c',
+                    fields: ['name', 'geometry']
+                }
+                let service = new window.google.maps.places.PlacesService(this.state.map);
+                service.getDetails(request, this.placeCallback);
+                console.log("google", service)
+            } catch (e) {
+                console.log("No service", e)
+            }
+            // service.getDetails(request, callback);
+
+
+
+        } else {
+            console.log('Autocomplete is not loaded yet!')
+        }
+    }
+    placeCallback = (place, status) => {
+        console.log("Place callback", place, status)
+        let center = {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lat()
+        }
+        this.setState({
+            center: center,
+            placeName: place.name
+        })
+        console.log(place.geometry.location.LatLngBounds )
+    }
+    onLoadMarker (marker) {
+        console.log('marker: ', marker)
+    }
+
+    render () {
+        return (
+            <div>
+                <h1>hello world</h1>
+                <LoadScript
+                    googleMapsApiKey={API_KEY}
+                    libraries={["places"]}
+                >
+                <GoogleMap
+                    id="searchbox-example"
+                    mapContainerStyle={mapContainerStyle}
+                    zoom={2.5}
+                    center={this.state.center}
+                    options={{disableDefaultUI: true}}
+                    onLoad={
+                        (map) => {
+                            this.setState({map: map})
+                        }}
+
+                >
+                    <Autocomplete
+                        onLoad={this.onLoad}
+                        onPlaceChanged={this.onPlaceChanged}
+                    >
+                        <input
+                            type="text"
+                            placeholder="Customized your placeholder"
+                            style={{
+                                boxSizing: `border-box`,
+                                border: `1px solid transparent`,
+                                width: `240px`,
+                                height: `32px`,
+                                padding: `0 12px`,
+                                borderRadius: `3px`,
+                                boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                                fontSize: `14px`,
+                                outline: `none`,
+                                textOverflow: `ellipses`,
+                                position: "absolute",
+                                left: "50%",
+                                marginLeft: "-120px"
+                            }}
+                        />
+                    </Autocomplete>
+                    {this.state.markers.map((item, key)=>
+                        <div key={key}>
+                        <Marker
+                            onLoad={this.onLoadMarker}
+                            position={item}
+                        />
+                        </div>
+                    )}
+                </GoogleMap>
+                </LoadScript>
+                <button id="btn">Hello world</button>
+            </div>
+        )
+    }
+}
 
