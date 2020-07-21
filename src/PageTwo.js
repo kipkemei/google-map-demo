@@ -47,6 +47,7 @@ export default class extends Component {
       .catch((error) => {
         console.log(error);
       });
+    setTimeout(() => this.setState({ selected: false }), 3000);
   };
 
   handleSelectPrediction = (loc) => {
@@ -59,18 +60,21 @@ export default class extends Component {
   };
 
   fetchPlace = () => {
-    console.log("AAAAAAA", this.state);
-    try {
-      var request = {
-        placeId: this.state.placeId,
-        fields: ["name", "geometry"],
-      };
-      let service = new window.google.maps.places.PlacesService(this.state.map);
-      console.log("BBB", service);
-      service.getDetails(request, this.placeCallback);
-      console.log("google", service, request);
-    } catch (e) {
-      console.log("No service", e);
+    if (this.state.location !== "") {
+      try {
+        var request = {
+          placeId: this.state.placeId,
+          fields: ["name", "geometry"],
+        };
+        let service = new window.google.maps.places.PlacesService(
+          this.state.map
+        );
+        console.log("BBB", service);
+        service.getDetails(request, this.placeCallback);
+        console.log("google", service, request);
+      } catch (e) {
+        console.log("No service", e);
+      }
     }
   };
 

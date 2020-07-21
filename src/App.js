@@ -8,11 +8,11 @@ export default class extends Component {
     this.state = {
       placeId: null,
       markers: [],
-      mapPage: false,
+      mapPage: true,
     };
   }
 
-  goBack = (placeId) => {
+  goBack = () => {
     this.setState({ mapPage: !this.state.mapPage });
   };
 
@@ -22,6 +22,7 @@ export default class extends Component {
     console.log("newMarker", newMarker, markers);
     this.setState({ markers: [...markers, marker] });
     console.log("Added");
+    this.goBack();
   };
 
   render() {
